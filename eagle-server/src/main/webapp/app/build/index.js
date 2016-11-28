@@ -147,7 +147,24 @@
 				grunt.stderr.pipe(process.stdout);
 				grunt.on('exit', function(code) {
 					console.log("Grunt Exit Code:", code);
-					process.exit(code)
+					
+					// =====================================================
+					// =                  Customize Start                  =
+					// =====================================================
+					console.log("Remove css @import...");
+					fs.readFile('ui/public/css/doc.css', 'utf8', function (err, css) {
+						if (err) return console.log(err);
+
+						css = css.replace(/@import [^)]+\);?/g, '');
+						fs.writeFile('ui/public/css/doc.css', css, 'utf8', function (err) {
+							if (err) return console.log(err);
+							
+							process.exit(code);
+						});
+					});
+					// =====================================================
+					// =                   Customize End                   =
+					// =====================================================
 				});
 			});
 		});
